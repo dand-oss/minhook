@@ -67,6 +67,11 @@ if(BUILD_SHARED_LIBS)
   )
 endif()
 
+# do not remove - WG7 requires the static lib
+set(staticlibname minhook-static)
+
+add_library(${staticlibname} STATIC ${SOURCES_MINHOOK} ${SOURCES_HDE})
+
 add_library(minhook ${SOURCES_MINHOOK} ${SOURCES_HDE} ${RESOURCES})
 
 target_include_directories(minhook PUBLIC
@@ -133,6 +138,10 @@ install(TARGETS minhook
         ARCHIVE DESTINATION "lib"
         LIBRARY DESTINATION "lib"
 )
+
+install(TARGETS ${staticlibname}
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin)
 
 install(
   EXPORT
