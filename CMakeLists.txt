@@ -72,6 +72,15 @@ set(staticlibname minhook-static)
 
 add_library(${staticlibname} STATIC ${SOURCES_MINHOOK} ${SOURCES_HDE})
 
+# Add include directories for the static library
+target_include_directories(${staticlibname} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+  $<INSTALL_INTERFACE:include>
+)
+
+target_include_directories(${staticlibname} PRIVATE "src/")
+target_include_directories(${staticlibname} PRIVATE "src/hde/")
+
 add_library(minhook ${SOURCES_MINHOOK} ${SOURCES_HDE} ${RESOURCES})
 
 target_include_directories(minhook PUBLIC
@@ -132,16 +141,13 @@ install(
 #     INSTALL     #
 ###################
 
-install(TARGETS minhook
+# Install both targets with export
+install(TARGETS minhook ${staticlibname}
         EXPORT minhook-targets
         RUNTIME DESTINATION "bin"
         ARCHIVE DESTINATION "lib"
         LIBRARY DESTINATION "lib"
 )
-
-install(TARGETS ${staticlibname}
-    ARCHIVE DESTINATION lib
-    RUNTIME DESTINATION bin)
 
 install(
   EXPORT
